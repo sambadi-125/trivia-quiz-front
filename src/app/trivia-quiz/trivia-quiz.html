@@ -1,0 +1,54 @@
+<div class="container">
+  <form [formGroup]="quizForm" (ngSubmit)="onSubmit()">
+    <div class="quiz-header">
+      <img ngSrc="/trivia-quiz-logo.png" alt="Welcome to Trivia Quiz" class="quiz-logo" height="537"
+           width="2150">
+    </div>
+    <mat-card class="quiz-card">
+      <mat-card-content>
+        @for (quizQuestion of allQuestions; track quizQuestion) {
+          <div class="question">
+            <mat-card class="question-card">
+              <mat-card-title>{{ quizQuestion.question }}</mat-card-title>
+              <mat-card-content>
+                <mat-radio-group [formControlName]="quizQuestion.id.toString()">
+                  @for (answerChoice of quizQuestion.answerChoices; track answerChoice) {
+                    <mat-radio-button [value]="answerChoice">
+                      {{ answerChoice }}
+                    </mat-radio-button>
+                  }
+                </mat-radio-group>
+                @if (showResults()) {
+                  <div class="feedback">
+                    @if (getValidationResult(quizQuestion)?.isPlayerAnswerCorrect) {
+                      <p class="correct">
+                        Correct!
+                      </p>
+                    }
+                    @if (!getValidationResult(quizQuestion)?.isPlayerAnswerCorrect) {
+                      <p class="incorrect">
+                        Incorrect.
+                        <!-- TODO: provide correct answer from the service??
+                        Correct Answer: {{ quizQuestion.answer }}
+                        -->
+                      </p>
+                    }
+                  </div>
+                }
+              </mat-card-content>
+            </mat-card>
+          </div>
+        }
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" type="submit">Submit</button>
+      </mat-card-actions>
+    </mat-card>
+
+    @if (showResults()) {
+      <div class="score" animate.enter="fade-in">
+        <h2>Your Score: {{ score }} / {{ allQuestions.length }}</h2>
+      </div>
+    }
+  </form>
+</div>
