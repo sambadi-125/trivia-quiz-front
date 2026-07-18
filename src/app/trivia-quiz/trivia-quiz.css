@@ -12,10 +12,12 @@
 
 .question-card {
   margin: 10px 0;
+  background-color: #FEE8D6;
 }
 
 mat-card-title {
   font-weight: bold;
+  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
 }
 
 
@@ -25,10 +27,14 @@ mat-card-title {
 
 .correct {
   color: #4caf50;
+  font-weight: 500;
+  font-size: 1.2rem;
 }
 
 .incorrect {
   color: #f44336;
+  font-weight: 500;
+  font-size: 1.2rem;
 }
 
 
@@ -48,6 +54,15 @@ mat-card-title {
 
 mat-card-content p {
   margin: 5px 0;
+}
+
+mat-button-toggle-group {
+  border-radius: 8px;
+}
+
+mat-button-toggle.mat-button-toggle-checked {
+  background-color: #FFA500;
+  color: white;
 }
 
 mat-card-actions {
