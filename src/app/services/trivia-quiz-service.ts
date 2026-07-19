@@ -15,8 +15,6 @@ export class TriviaQuizService {
 
   getQuestions(): Observable<QuizQuestion[]> {
     return this.http.get<QuizQuestion[]>(`${this.baseUrl}/api/questions`).pipe(
-      // TODO: remove console log when finished
-      tap((data) => console.log(JSON.stringify(data))),
       catchError((err: HttpErrorResponse) => {
         console.error('Failed to fetch quiz questions', err);
         return throwError(() => err);
@@ -28,8 +26,6 @@ export class TriviaQuizService {
     return this.http
       .post<PlayerAnswerValidationResponse[]>(`${this.baseUrl}/api/checkanswers`, playerAnswers)
       .pipe(
-        // TODO: remove console log when finished
-        tap((data) => console.log(JSON.stringify(data))),
         catchError((err: HttpErrorResponse) => {
           console.error("Failed to retrieve player's answers validation", err);
           return throwError(() => err);
