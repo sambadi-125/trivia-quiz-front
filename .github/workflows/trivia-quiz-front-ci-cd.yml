@@ -33,17 +33,17 @@ jobs:
         run: npm ci
 
       - name: Log in to ghcr.io
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.CR_PAT }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build & push Docker image
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         run: |
-          TAG=${{ github.ref == 'refs/heads/main' && 'latest' || 'dev' }}
+          TAG=latest
           BASE_URL=${{ github.ref == 'refs/heads/main' && '/' || '/trivia/' }}
           docker build --build-arg BASE_HREF=$BASE_URL -t ${{ env.IMAGE }}:$TAG -t ${{ env.IMAGE }}:${{ github.sha }} .
           docker push ${{ env.IMAGE }}:$TAG
