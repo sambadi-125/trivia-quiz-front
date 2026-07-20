@@ -1,4 +1,6 @@
+import { PlayerAnswerItem } from './player-answer-item';
+
 export interface PlayerAnswer {
-  questionId: number;
-  playerAnswer: string;
+  quizId: string;
+  playerAnswers: PlayerAnswerItem[];
 }

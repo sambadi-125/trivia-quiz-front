@@ -15,6 +15,7 @@ import { PlayerAnswer } from '../models/player-answer';
 import { PlayerAnswerValidationResponse } from '../models/player-answer-validation-response';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { PlayerAnswerItem } from '../models/player-answer-item';
 
 @Component({
   selector: 'app-trivia-quiz',
@@ -26,14 +27,15 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     MatButtonModule,
     NgOptimizedImage,
     MatButtonToggleModule,
-    MatProgressSpinner
+    MatProgressSpinner,
   ],
   templateUrl: './trivia-quiz.html',
   styleUrl: './trivia-quiz.css',
 })
 export class TriviaQuiz implements OnInit {
   allQuestions: QuizQuestion[] = [];
-  playerResponses: PlayerAnswer[] = [];
+  quizId = '';
+  playerResponses: PlayerAnswerItem[] = [];
   playerResponseValidationResults = signal<PlayerAnswerValidationResponse[]>([]);
   quizForm: FormGroup;
   score = signal(0);
@@ -49,7 +51,8 @@ export class TriviaQuiz implements OnInit {
   ngOnInit() {
     this.triviaQuizService.getQuestions().subscribe({
       next: (data) => {
-        this.allQuestions = data;
+        this.quizId = data.quizId;
+        this.allQuestions = data.quizQuestions;
         this.allQuestions.forEach((quizQuestion) => {
           this.quizForm.addControl(
             quizQuestion.id.toString(),
@@ -73,16 +76,21 @@ export class TriviaQuiz implements OnInit {
       });
     });
 
-    this.triviaQuizService.checkAnswers(this.playerResponses).subscribe({
-      next: (data) => {
-        this.playerResponseValidationResults.set(data);
-        this.computeScore();
-        this.showResults.set(true);
-      },
-      error: (err) => {
-        console.error('Failed to retrieve answers validation', err);
-      },
-    });
+    this.triviaQuizService
+      .checkAnswers({
+        quizId: this.quizId,
+        playerAnswers: this.playerResponses,
+      })
+      .subscribe({
+        next: (data) => {
+          this.playerResponseValidationResults.set(data);
+          this.computeScore();
+          this.showResults.set(true);
+        },
+        error: (err) => {
+          console.error('Failed to retrieve answers validation', err);
+        },
+      });
   }
 
   getValidationResult(quizQuestion: QuizQuestion): PlayerAnswerValidationResponse | undefined {
