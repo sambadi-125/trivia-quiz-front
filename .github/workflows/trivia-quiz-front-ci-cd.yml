@@ -44,7 +44,7 @@ jobs:
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         run: |
           TAG=latest
-          BASE_URL=${{ github.ref == 'refs/heads/main' && '/' || '/trivia/' }}
+          BASE_URL=/trivia/
           docker build --build-arg BASE_HREF=$BASE_URL -t ${{ env.IMAGE }}:$TAG -t ${{ env.IMAGE }}:${{ github.sha }} .
           docker push ${{ env.IMAGE }}:$TAG
           docker push ${{ env.IMAGE }}:${{ github.sha }}
