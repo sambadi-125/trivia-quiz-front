@@ -14,6 +14,7 @@ import { QuizQuestion } from '../models/quiz-question';
 import { PlayerAnswer } from '../models/player-answer';
 import { PlayerAnswerValidationResponse } from '../models/player-answer-validation-response';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-trivia-quiz',
@@ -25,6 +26,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     MatButtonModule,
     NgOptimizedImage,
     MatButtonToggleModule,
+    MatProgressSpinner
   ],
   templateUrl: './trivia-quiz.html',
   styleUrl: './trivia-quiz.css',
