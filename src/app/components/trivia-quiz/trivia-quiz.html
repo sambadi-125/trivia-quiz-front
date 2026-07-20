@@ -1,0 +1,55 @@
+<div class="container">
+  <form [formGroup]="quizForm" (ngSubmit)="onSubmit()">
+    <div class="quiz-header">
+      <img ngSrc="/trivia-quiz-logo.png" alt="Welcome to Trivia Quiz" class="quiz-logo" height="537"
+           width="2150">
+    </div>
+    <mat-card class="quiz-card">
+      <mat-card-content>
+        @for (quizQuestion of allQuestions; track quizQuestion) {
+          <div class="question">
+            <mat-card class="question-card">
+              <mat-card-title>{{ quizQuestion.question }}</mat-card-title>
+              <mat-card-content>
+                <mat-button-toggle-group
+                  [formControlName]="quizQuestion.id.toString()"
+                  [hideSingleSelectionIndicator]="true"
+                >
+                  @for (answerChoice of quizQuestion.answerChoices; track answerChoice) {
+                    <mat-button-toggle [value]="answerChoice">
+                      {{ answerChoice }}
+                    </mat-button-toggle>
+                  }
+                </mat-button-toggle-group>
+                @if (showResults()) {
+                  <div class="feedback">
+                    @if (getValidationResult(quizQuestion)?.isPlayerAnswerCorrect) {
+                      <p class="correct">
+                        Correct!
+                      </p>
+                    }
+                    @if (!getValidationResult(quizQuestion)?.isPlayerAnswerCorrect) {
+                      <p class="incorrect">
+                        Incorrect.
+                        Correct Answer: {{ getValidationResult(quizQuestion)?.correctAnswer }}
+                      </p>
+                    }
+                  </div>
+                }
+              </mat-card-content>
+            </mat-card>
+          </div>
+        }
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" [disabled]="isDisabled()" type="submit">Submit</button>
+      </mat-card-actions>
+    </mat-card>
+
+    @if (showResults()) {
+      <div class="score" animate.enter="fade-in">
+        <h2>Your Score: {{ score() }} / {{ allQuestions.length }}</h2>
+      </div>
+    }
+  </form>
+</div>

@@ -1,0 +1,66 @@
+name: Trivia Quiz Front
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '20.x'
+  IMAGE: ghcr.io/sambadi-125/trivia-quiz-front
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-test:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Log in to ghcr.io
+        if: github.event_name == 'push'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.CR_PAT }}
+
+      - name: Build & push Docker image
+        if: github.event_name == 'push'
+        run: |
+          TAG=${{ github.ref == 'refs/heads/main' && 'latest' || 'dev' }}
+          BASE_URL=${{ github.ref == 'refs/heads/main' && '/' || '/trivia/' }}
+          docker build --build-arg BASE_HREF=$BASE_URL -t ${{ env.IMAGE }}:$TAG -t ${{ env.IMAGE }}:${{ github.sha }} .
+          docker push ${{ env.IMAGE }}:$TAG
+          docker push ${{ env.IMAGE }}:${{ github.sha }}
+
+  deploy-dev:
+    name: Deploy to DEV
+    needs: build-and-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to dev namespace
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: magomed
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            sudo kubectl set image deployment/trivia-frontend trivia-frontend=ghcr.io/sambadi-125/trivia-quiz-front:${{ github.sha }} -n dev
+            sudo kubectl rollout status deployment/trivia-frontend -n dev --timeout=120s
