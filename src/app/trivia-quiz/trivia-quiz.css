@@ -8,16 +8,24 @@
 
 .quiz-card {
   margin: 20px 0;
+  border-radius: 12px;
+  padding: 8px;
+  background-color: #ffffff;
 }
 
 .question-card {
-  margin: 10px 0;
+  margin: 16px 0;
+  padding: 8px 4px;
   background-color: #FEE8D6;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 }
 
 mat-card-title {
   font-weight: bold;
-  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+  padding: 0.75rem 0.5rem;
+  font-size: 1.15rem;
+  line-height: 1.4;
 }
 
 
@@ -52,12 +60,32 @@ mat-card-title {
   }
 }
 
+mat-card-content {
+  position: relative;
+}
+
+mat-spinner {
+  margin: 40px auto;
+  padding-bottom: 20em;
+}
+
+mat-spinner ::ng-deep circle,
+mat-spinner circle {
+  stroke: #FFA500;
+}
+
 mat-card-content p {
   margin: 5px 0;
 }
 
 mat-button-toggle-group {
   border-radius: 8px;
+  width: 100%;
+  display: flex;
+}
+
+mat-button-toggle {
+  flex: 1;
 }
 
 mat-button-toggle.mat-button-toggle-checked {
@@ -69,6 +97,37 @@ mat-card-actions {
   display: flex;
   justify-content: center;
   padding: 10px 0;
+}
+
+mat-card-actions button {
+  background-color: #FFA500;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 0 32px;
+  height: 44px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(255, 165, 0, 0.4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+mat-card-actions button:hover:not(:disabled) {
+  background-color: #ff9500;
+  box-shadow: 0 4px 12px rgba(255, 165, 0, 0.5);
+  transform: translateY(-2px);
+}
+
+mat-card-actions button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(255, 165, 0, 0.4);
+}
+
+mat-card-actions button:disabled {
+  background-color: #d3d3d3;
+  color: #b89b85;
+  box-shadow: none;
+  cursor: not-allowed;
 }
 
 .score {

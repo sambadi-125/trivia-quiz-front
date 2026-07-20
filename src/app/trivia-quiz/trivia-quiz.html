@@ -6,6 +6,9 @@
     </div>
     <mat-card class="quiz-card">
       <mat-card-content>
+        @if (allQuestions.length <= 0) {
+          <mat-spinner></mat-spinner>
+        }
         @for (quizQuestion of allQuestions; track quizQuestion) {
           <div class="question">
             <mat-card class="question-card">
